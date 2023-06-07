@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Profile</h1>
+<br>
+{% if info %}
+<h5 class="p-1">Username: <span class="border border-3 p-1 rounded">{{ info.username }}</span></h5>
+<h5 class="p-1">Email: <span class="border border-3 p-1 rounded">{{ info.email }}</span></h5>
+<h5 class="p-1">Name: <span class="border border-3 p-1 rounded">{{ info.firstname }} {{ info.lastname }}</span></h5>
+<h5 class="p-1">Created on: <span class="border border-3 p-1 rounded">{{ info.created_on }}</span></h5>
+{% endif %}
+{% endblock %}

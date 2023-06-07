@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Register</h1>
+<p><a href="{{ url_for('user.login') }}"><i class="fs-6 bi-box-arrow-left">  </i>Back to Login</a></p>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <div class="d-grid gap-0 mb-3 mt-3 p-3 bg-secondary bg-opacity-25 rounded">
+        <div>
+            {{ form.email.label }}<br>
+            {{ form.email(class_="form-control", size=32) }}<br>
+            {% for error in form.email.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.password.label }}<br>
+            {{ form.password(class_="form-control", size=32) }}<br>
+            {% for error in form.password.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.password2.label }}<br>
+            {{ form.password2(class_="form-control", size=32) }}<br>
+            {% for error in form.password2.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.first_name.label }}<br>
+            {{ form.first_name(class_="form-control", size=32) }}<br>
+            {% for error in form.first_name.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.last_name.label }}<br>
+            {{ form.last_name(class_="form-control", size=32) }}<br>
+            {% for error in form.last_name.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </div>
+        <p">{{ form.submit(class_="form-control") }}</p>
+    </div>
+</form>
+{% endblock %}

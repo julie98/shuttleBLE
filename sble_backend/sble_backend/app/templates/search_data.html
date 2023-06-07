@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if filtered_data %}
+<script>
+    var data_object = {{ filtered_data|tojson|safe }};
+</script>
+{% endif %}
+<script>
+            function download_csv() {
+                var data_csv = "timestamp,latitude,longitude,speed,speedAcc,vertical_acc,altitude,\
+                course,courseAcc,heading,horizontal_acc,major,minor,rssi,rssi_accuracy\n";
+                data_object.forEach(function(row) {
+                    row.BLE.forEach(function(beacon) {
+                        data_csv += row.timestamp + "," + row.GPS.latitude + ","
+                        + row.GPS.longitude + "," + row.GPS.speed + "," + row.GPS.speedAcc
+                        + "," + row.GPS.vertical_acc + "," + row.GPS.altitude + "," + row.GPS.course
+                        + "," + row.GPS.courseAcc + "," + row.GPS.heading
+                        + "," + row.GPS.horizontal_acc + "," + beacon.major + "," + beacon.minor
+                        + "," + beacon.rssi + "," + beacon.accuracy;
+                        data_csv += "\n";
+                    });
+                });
+
+                var hiddenElement = document.createElement('a');
+                hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(data_csv);
+                hiddenElement.target = '_blank';
+
+                //provide the name for the CSV file to be downloaded
+                hiddenElement.download = 'SBLE_data.csv';
+                hiddenElement.click();
+            }
+</script>
+{% if current_user.is_anonymous %}
+<h1>Unauthorized access.</h1>
+{% else %}
+<h1>Search Data</h1>
+{% if error %}
+<p style="color:red">{{ error }}</p>
+{% endif %}
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <div class="container-sm m-1 mb-2">
+        <div class="row">
+            <div class="mb-3 mt-3 p-3 bg-secondary bg-opacity-25 rounded" style="width:400px">
+                <h4>Start Time:</h4>
+                <div class="d-flex flex-row">
+                    <div>
+                        {{ form.start_month.label(class_='form-label') }}
+                        {{ form.start_month(class_='form-select') }}
+                    </div>
+                    <div>
+                        {{ form.start_day.label(class_="form-label") }}
+                        {{ form.start_day(class_='form-select') }}
+                    </div>
+                    <div>
+                        {{ form.start_year.label(class_="form-label") }}
+                        {{ form.start_year(class_='form-select') }}
+                    </div>
+                </div>
+
+                <div class="d-flex flex-row">
+                    <div>
+                        {{ form.start_hour.label(class_='form-label') }}
+                        {{ form.start_hour(class_='form-select') }}
+                    </div>
+                    <div>
+                        {{ form.start_minute.label(class_="form-label") }}
+                        {{ form.start_minute(class_='form-select') }}
+                    </div>
+                    <div>
+                        {{ form.start_period.label(class_="form-label") }}
+                        {{ form.start_period(class_='form-select') }}
+                    </div>
+                </div><br>
+
+                <h4>End Time:</h4>
+                <div class="d-flex flex-row">
+                    <div>
+                        {{ form.end_month.label(class_='form-label') }}
+                        {{ form.end_month(class_='form-select') }}
+                    </div>
+                    <div>
+                        {{ form.end_day.label(class_="form-label") }}
+                        {{ form.end_day(class_='form-select') }}
+                    </div>
+                    <div>
+                        {{ form.end_year.label(class_="form-label") }}
+                        {{ form.end_year(class_='form-select') }}
+                    </div>
+                </div>
+
+                <div class="d-flex flex-row">
+                    <div>
+                        {{ form.end_hour.label(class_='form-label') }}
+                        {{ form.end_hour(class_='form-select') }}
+                    </div>
+                    <div>
+                        {{ form.end_minute.label(class_="form-label") }}
+                        {{ form.end_minute(class_='form-select') }}
+                    </div>
+                    <div>
+                        {{ form.end_period.label(class_="form-label") }}
+                        {{ form.end_period(class_='form-select') }}
+                    </div>
+                </div>
+
+                <div>
+                    {{ form.beacon_major.label }}<br>
+                    {{ form.beacon_major(class_="form-control", size=32) }}<br>
+                    {% for error in form.beacon_major.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </div>
+
+                <h4>Bounding Box:</h4>
+                <div>
+                    {{ form.bbox_botleft.label }}<br>
+                    {{ form.bbox_botleft(class_="form-control", size=32) }}<br>
+                    {% for error in form.bbox_botleft.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </div>
+                <div>
+                    {{ form.bbox_topright.label }}<br>
+                    {{ form.bbox_topright(class_="form-control", size=32) }}<br>
+                    {% for error in form.bbox_topright.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </div>
+            <p>{{ form.submit(class_="form-control", ) }}</p>
+            <button class="btn btn-primary" onclick="download_csv()">Download as CSV</button>
+            </div>
+        </div>
+    </div>
+</form>
+<table class="table table-striped table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>Time Stamp</th>
+        <th>GPS</th>
+        <th>BLE</th>
+    </tr>
+    </thead>
+    <tbody>
+        {% for data in filtered_data %}
+        <tr>
+            <td>{{ data.timestamp }}</td>
+            <td>{{ data.GPS }}</td>
+            <td>{{ data.BLE }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+{% endblock %}

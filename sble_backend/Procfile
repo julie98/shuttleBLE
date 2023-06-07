@@ -1,0 +1,1 @@
+web: python sble_backend/manage.py

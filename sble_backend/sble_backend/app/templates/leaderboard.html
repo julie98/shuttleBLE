@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mb-3">Leaderboard</h1>
+<div class="row">
+    <table class="table table-striped table-bordered table-hover">
+        <tr>
+            <th>Email</th>
+            <th>Total Minutes Spent Collecting Data</th>
+        </tr>
+        {% for key,val in entries.items() %}
+        <tr>
+            <td>{{ key }}</td>
+            <td>{{ val.total_time_minutes }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

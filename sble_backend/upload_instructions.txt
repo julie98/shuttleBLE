@@ -1,0 +1,4 @@
+In the root directory:
+ibmcloud api https://api.ng.bluemix.net
+ibmcloud login -u RouteMe2@ucsc.edu -o ShuttleBLE -s SBLE
+ibmcloud app push SBLE -b python_buildpack
